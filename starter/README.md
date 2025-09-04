@@ -3,9 +3,10 @@
 [Description]
 
 ## Group Members
-- **John Doe**: jd19@fsu.edu
-- **Jane Smith**: js19@fsu.edu
-- **Alex Brown**: ab19@fsu.edu
+- **Naman Bajpai**: nb24l@fsu.edu
+- **Robert Romero**: rjr21h@fsu.edu
+- **Michael Mayin**: mam22bv@fsu.edu
+
 ## Division of Labor
 
 ### Part 1: Prompt
