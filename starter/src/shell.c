@@ -1,3 +1,6 @@
+#define _POSIX_C_SOURCE 200809L 
+#define _XOPEN_SOURCE 700  
+
 #include "lexer.h"
 #include "shell.h"
 
@@ -12,6 +15,10 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
+
+#ifndef PATH_MAX
+#define PATH_MAX 4096
+#endif
 
 
 static void free_token_array(char **tokens, int count) {
@@ -80,19 +87,18 @@ static int resolve_executable(const char *cmd, char *out, size_t out_sz) {
     const char *path = getenv("PATH");
     if (!path) path = "/bin:/usr/bin";
 
-    char *paths = strdup(path);
-    char *save = NULL;
-    for (char *dir = strtok_r(paths, ":", &save); dir; dir = strtok_r(NULL, ":", &save)) {
-        size_t need = strlen(dir) + 1 + strlen(cmd) + 1;
-        if (need > out_sz) continue;
-        snprintf(out, out_sz, "%s/%s", dir, cmd);
-        if (access(out, X_OK) == 0) {
-            free(paths);
-            return 0;
-        }
+char *paths = strdup(path);
+for (char *dir = strtok(paths, ":"); dir; dir = strtok(NULL, ":")) {
+    size_t need = strlen(dir) + 1 + strlen(cmd) + 1;
+    if (need > out_sz) continue;
+    snprintf(out, out_sz, "%s/%s", dir, cmd);
+    if (access(out, X_OK) == 0) {
+        free(paths);
+        return 0;
     }
-    free(paths);
-    return -1;
+}
+free(paths);
+return -1;
 }
 
 
