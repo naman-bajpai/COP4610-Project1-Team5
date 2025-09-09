@@ -3,13 +3,21 @@
 #include "prompt.h"
 #include <stdio.h>
 #include <string.h>
+
+void env_var_expansion(char ** token_ptr){
+    char *token = *token_ptr;
+    const char *env_val = getenv(token + 1);
+    free(token);
+    *token_ptr = strdup(env_val?env_val:"");
+}
+
 int main(void) {
     while (1) {
         printf("%s>",get_prompt());
         fflush(stdout);
 
         char *input = get_input();
-        if (!input) break;        
+        if (!input) break;
         if (input[0] == '\0' && feof(stdin)) { /* EOF */
             free(input);
             break;
@@ -20,17 +28,7 @@ int main(void) {
         tokenlist *tokens = get_tokens(input);
         for (int i = 0; i < (int)tokens->size; i++) {
             if (tokens->items[i][0]== '$'){
-                const char *env_val = getenv(tokens->items[i] + 1);
-                if (env_val){
-                    free(tokens->items[i]);
-                    tokens->items[i] = strdup(env_val);
-                }
-                else {
-                    free(tokens->items[i]);
-                    tokens->items[i] = strdup(""); 
-                }
-                printf("token %d: (%s)\n", i, tokens->items[i]);
-
+                env_var_expansion(&tokens->items[i]);
             }
         }
 
