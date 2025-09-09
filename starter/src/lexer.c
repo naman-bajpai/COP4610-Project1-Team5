@@ -1,4 +1,5 @@
 #include "lexer.h"
+#include "prompt.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -160,7 +161,7 @@ int tokenize(const char *input, char **tokens, int max_tokens) {
  */
 int main(void) {
     while (1) {
-        printf("> ");
+        printf("%s>",get_prompt());
         fflush(stdout);
 
         char *input = get_input();

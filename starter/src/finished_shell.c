@@ -374,6 +374,7 @@ static int run_pipeline(Pipeline *p, const char *cmdline) {
 }
 
 
+#ifdef ReferenceTest
 int main(void) {
     struct sigaction sa = {0};
     sa.sa_handler = SIG_IGN;
@@ -454,3 +455,4 @@ int main(void) {
     free(line);
     return 0;
 }
+#endif
