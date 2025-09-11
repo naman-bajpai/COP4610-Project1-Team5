@@ -1,6 +1,7 @@
 #define _POSIX_C_SOURCE 200809L
 #include "lexer.h"
 #include "prompt.h"
+#include "path_search.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -26,8 +27,6 @@ int main(void) {
             break;
         }
 
-        printf("whole input: %s\n", input);
-
         tokenlist *tokens = get_tokens(input);
         for (int i = 0; i < (int)tokens->size; i++) {
             //enviornment variable expansion
@@ -41,12 +40,12 @@ int main(void) {
                 }
                 else if (tokens->items[i][1]=='/'){
                     tilde_expansion(&tokens->items[i]);
-                }
-
-            
+                } 
             }
+            printf("token: (%s)\n",tokens->items[i]);
 
         }
+        search_path(tokens->items[0]);
 
         free(input);
         free_tokens(tokens);
