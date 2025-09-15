@@ -45,7 +45,14 @@ int main(void) {
             printf("token: (%s)\n",tokens->items[i]);
 
         }
-        search_path(tokens->items[0]);
+        //path search
+        char *command_path = search_path(tokens->items[0]); 
+        if (command_path) {
+            printf("Found command: %s at: %s\n", tokens->items[0], command_path);
+            free(command_path);
+        } else {
+            printf("command not found: %s\n", tokens->items[0]);
+        }
 
         free(input);
         free_tokens(tokens);

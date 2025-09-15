@@ -1,1 +1,1 @@
-void search_path(char * command_name);
+char* search_path(char *command_name);
