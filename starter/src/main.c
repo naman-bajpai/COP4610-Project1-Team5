@@ -1,9 +1,11 @@
 #define _POSIX_C_SOURCE 200809L
+#include <unistd.h>
+#include <stdio.h>
+#include <string.h>
 #include "lexer.h"
 #include "prompt.h"
 #include "path_search.h"
-#include <stdio.h>
-#include <string.h>
+#include "external_command_execution.h"
 
 void env_var_expansion(char ** token_ptr){
     const char *env_val = getenv(*token_ptr + 1);
@@ -14,6 +16,7 @@ void tilde_expansion(char ** token_ptr){
     const char *home = getenv("HOME");
     *token_ptr = strdup(home?home:"");
 }
+
 
 int main(void) {
     while (1) {
@@ -42,13 +45,14 @@ int main(void) {
                     tilde_expansion(&tokens->items[i]);
                 } 
             }
-            printf("token: (%s)\n",tokens->items[i]);
+            // printf("token: (%s)\n",tokens->items[i]);
 
         }
         //path search
         char *command_path = search_path(tokens->items[0]); 
         if (command_path) {
-            printf("Found command: %s at: %s\n", tokens->items[0], command_path);
+            // printf("Found command: %s at: %s\n", tokens->items[0], command_path);
+            run_command(command_path, tokens->items);
             free(command_path);
         } else {
             printf("command not found: %s\n", tokens->items[0]);
