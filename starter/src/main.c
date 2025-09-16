@@ -30,6 +30,8 @@ int main(void) {
             break;
         }
 
+        char *file_in = NULL;
+        char *file_out = NULL;
         tokenlist *tokens = get_tokens(input);
         for (int i = 0; i < (int)tokens->size; i++) {
             //enviornment variable expansion
@@ -45,14 +47,38 @@ int main(void) {
                     tilde_expansion(&tokens->items[i]);
                 } 
             }
+            //io redirection
+            if (tokens->items[i][0] == '<'){
+                 if (i + 1 < tokens->size) {
+                    file_in = tokens->items[i + 1];
+                    i++; 
+                
+                } else {
+                    fprintf(stderr, "No input file specified\n");
+                }
+            }
+            else if (tokens->items[i][0] == '>') {
+                 if (i + 1 < tokens->size) {
+                    file_out = tokens->items[i + 1];
+                    i++; 
+                
+                } else {
+                    fprintf(stderr, "No output file specified\n");
+                }
+            
+            }
             // printf("token: (%s)\n",tokens->items[i]);
-
         }
         //path search
         char *command_path = search_path(tokens->items[0]); 
         if (command_path) {
             // printf("Found command: %s at: %s\n", tokens->items[0], command_path);
-            run_command(command_path, tokens->items);
+            if (file_in || file_out){
+                run_command_with_redirection(command_path,tokens->items,file_in,file_out);
+            }
+            else{
+                run_command(command_path, tokens->items);
+            }
             free(command_path);
         } else {
             printf("command not found: %s\n", tokens->items[0]);
