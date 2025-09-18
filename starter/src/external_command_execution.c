@@ -6,7 +6,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-void run_command(const char *command_path, char *const argv[]){
+void run_command(const char *command_path, char *const argv[], int isBackgroundProcess){
     pid_t pid = fork();
     if (pid == -1) {
         perror("fork failed");
@@ -20,16 +20,22 @@ void run_command(const char *command_path, char *const argv[]){
     }
     else{
         int status;
-        if (waitpid(pid, &status, 0) == -1) {
-            perror("waitpid failed");
-        } else if (WIFEXITED(status)) {
-            // printf("Child exited with status %d\n", WEXITSTATUS(status));
+        if (isBackgroundProcess){
+            // printf("not going to wait\n");
+        }
+        else{
+            if (waitpid(pid, &status, 0) == -1) {
+                perror("waitpid failed");
+            } else if (WIFEXITED(status)) {
+                // printf("Child exited with status %d\n", WEXITSTATUS(status));
+            }
+
         }
     }
 
 }
 
-void run_command_with_redirection(char* command_path, char *const argv[], char *file_in, char *file_out) {
+void run_command_with_redirection(char* command_path, char *const argv[], char *file_in, char *file_out, int isBackgroundProcess) {
     pid_t pid = fork();
     // make sure fork is successful
     if (pid == -1) {
@@ -65,6 +71,12 @@ void run_command_with_redirection(char* command_path, char *const argv[], char *
         exit(1);
     } else {//parent
         int status;
-        waitpid(pid, &status, 0);
+        if (isBackgroundProcess){
+            // printf("not going to wait\n");
+        }
+        else{
+
+            waitpid(pid, &status, 0);
+        }
     }
 }

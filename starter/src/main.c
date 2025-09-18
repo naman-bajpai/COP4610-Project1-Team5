@@ -32,6 +32,7 @@ int main(void) {
 
         char *file_in = NULL;
         char *file_out = NULL;
+        int isBackgroundProcess = 0;
         tokenlist *tokens = get_tokens(input);
         for (int i = 0; i < (int)tokens->size; i++) {
             //enviornment variable expansion
@@ -51,8 +52,8 @@ int main(void) {
             if (tokens->items[i][0] == '<'){
                  if (i + 1 < tokens->size) {
                     file_in = tokens->items[i + 1];
-                    i++; 
-                
+                    tokens->items[i] = NULL;
+                    i++;
                 } else {
                     fprintf(stderr, "No input file specified\n");
                 }
@@ -60,12 +61,16 @@ int main(void) {
             else if (tokens->items[i][0] == '>') {
                  if (i + 1 < tokens->size) {
                     file_out = tokens->items[i + 1];
-                    i++; 
-                
+                    tokens->items[i] = NULL;
+                    i++;
                 } else {
                     fprintf(stderr, "No output file specified\n");
                 }
-            
+            }
+            //background processing
+            if (tokens->items[i][0] == '&'){
+                isBackgroundProcess = 1;
+                tokens->items[i] = NULL;
             }
             // printf("token: (%s)\n",tokens->items[i]);
         }
@@ -74,12 +79,13 @@ int main(void) {
         if (command_path) {
             // printf("Found command: %s at: %s\n", tokens->items[0], command_path);
             if (file_in || file_out){
-                run_command_with_redirection(command_path,tokens->items,file_in,file_out);
+                run_command_with_redirection(command_path,tokens->items,file_in,file_out, isBackgroundProcess);
             }
             else{
-                run_command(command_path, tokens->items);
+                run_command(command_path, tokens->items, isBackgroundProcess);
             }
             free(command_path);
+            isBackgroundProcess = 0;
         } else {
             printf("command not found: %s\n", tokens->items[0]);
         }
