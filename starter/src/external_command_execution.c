@@ -28,18 +28,6 @@ void run_command(const char *command_path, char *const argv[]){
     }
 
 }
-void change_fd(char* file_out){
-    int fd_out = open(file_out,
-              O_WRONLY | O_CREAT | O_TRUNC,
-              S_IRUSR | S_IWUSR);
-    if (fd_out < 0) {
-        perror("open output failed");
-        exit(1);
-    }
-    dup2(fd_out, STDOUT_FILENO);//new process is going to look at file_descriptors for input/output locations, so change that before execvp
-
-}
-
 
 void run_command_with_redirection(char* command_path, char *const argv[], char *file_in, char *file_out) {
     pid_t pid = fork();
