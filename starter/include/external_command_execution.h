@@ -1,10 +1,11 @@
 #pragma once
-
 #ifndef EXTERNAL_COMMAND_EXECUTION_H
-#define EXTERNAL_COMMAND_EXECUTION_H 
+#define EXTERNAL_COMMAND_EXECUTION_H
 
-#define MAX_JOBS 10
-#define CMDLINE_MAX 200
+#include <sys/types.h>   // for pid_t
+
+#define MAX_JOBS     10
+#define CMDLINE_MAX  256   // keep consistent across the project
 
 typedef struct {
     int job_no;
@@ -20,5 +21,6 @@ void print_jobs(void);
 int is_builtin_command(const char *command);
 int execute_builtin_command(char **argv, int argc, char history[][CMDLINE_MAX], int hist_count);
 void add_to_history(char history[][CMDLINE_MAX], int *hist_count, const char *cmdline);
+pid_t last_spawned_pid(void);
 
 #endif

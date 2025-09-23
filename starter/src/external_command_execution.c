@@ -1,3 +1,4 @@
+#define _POSIX_C_SOURCE 200112L
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
@@ -7,9 +8,22 @@
 #include <fcntl.h>
 #include <string.h>
 #include "external_command_execution.h"
+
 //global job tracking
 static Job jobs[MAX_JOBS];
 static int next_job_no = 1;
+
+static pid_t g_last_child_pid = -1;
+pid_t last_spawned_pid(void) { return g_last_child_pid; }
+
+// Safe append helper
+static void safe_cat(char *dst, size_t cap, const char *src) {
+    size_t dlen = strlen(dst);
+    if (dlen >= cap) return;
+    size_t r = cap - 1 - dlen;
+    if (r == 0) return;
+    strncat(dst, src, r);
+}
 
 //helper function to add a job to the job list
 static void add_job(pid_t pid, const char *cmdline) {
