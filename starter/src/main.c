@@ -19,12 +19,18 @@ void tilde_expansion(char ** token_ptr){
 
 
 int main(void) {
+    char history[3][CMDLINE_MAX] = {{0}};
+    int hist_count = 0;
+    
     while (1) {
+        // check for finished background jobs
+        check_finished_jobs();
+        
         printf("%s>",get_prompt());
         fflush(stdout);
 
         char *input = get_input();
-        if (!input) break;
+        if (!input) break; 
         if (input[0] == '\0' && feof(stdin)) { 
             free(input);
             break;
@@ -74,20 +80,27 @@ int main(void) {
             }
             // printf("token: (%s)\n",tokens->items[i]);
         }
-        //path search
-        char *command_path = search_path(tokens->items[0]); 
-        if (command_path) {
-            // printf("Found command: %s at: %s\n", tokens->items[0], command_path);
-            if (file_in || file_out){
-                run_command_with_redirection(command_path,tokens->items,file_in,file_out, isBackgroundProcess);
-            }
-            else{
-                run_command(command_path, tokens->items, isBackgroundProcess);
-            }
-            free(command_path);
-            isBackgroundProcess = 0;
+        // Check if it's a built-in command
+        if (is_builtin_command(tokens->items[0])) {
+            execute_builtin_command(tokens->items, tokens->size, history, hist_count);
+            add_to_history(history, &hist_count, input);
         } else {
-            printf("command not found: %s\n", tokens->items[0]);
+            //path search
+            char *command_path = search_path(tokens->items[0]); 
+            if (command_path) {
+                // printf("Found command: %s at: %s\n", tokens->items[0], command_path);
+                if (file_in || file_out){
+                    run_command_with_redirection(command_path,tokens->items,file_in,file_out, isBackgroundProcess);
+                }
+                else{
+                    run_command(command_path, tokens->items, isBackgroundProcess);
+                }
+                free(command_path);
+                add_to_history(history, &hist_count, input);
+                isBackgroundProcess = 0;
+            } else {
+                printf("command not found: %s\n", tokens->items[0]);
+            }
         }
 
         free(input);

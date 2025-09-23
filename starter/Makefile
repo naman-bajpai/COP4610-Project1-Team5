@@ -3,7 +3,7 @@ OBJ := obj
 BIN := bin
 EXECUTABLE:= shell
 
-SRCS := $(wildcard $(SRC)/*.c)
+SRCS := $(filter-out $(SRC)/main.c, $(wildcard $(SRC)/*.c))
 OBJS := $(patsubst $(SRC)/%.c,$(OBJ)/%.o,$(SRCS))
 INCS := -Iinclude/
 DIRS := $(OBJ)/ $(BIN)/
