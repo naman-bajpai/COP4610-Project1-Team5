@@ -29,9 +29,9 @@ static void add_job(pid_t pid, const char *cmdline) {
 }
 
 //helper function to build command line string
-static void build_cmdline(char *cmdline, char *const argv[]) { 
+static void build_cmdline(char *cmdline, char *const argv[]) {
     cmdline[0] = '\0';
-    for (int i = 0; argv[i] != NULL; i++) { 
+    for (int i = 0; argv[i] != NULL; i++) {
         if (i > 0) strcat(cmdline, " ");
         strcat(cmdline, argv[i]);
     }
@@ -72,7 +72,7 @@ void run_command_with_redirection(char* command_path, char *const argv[], char *
         perror("fork failed");
         return;
     }
-    //check if child or parent   
+    //check if child or parent
     if (pid == 0) {//child
         if (file_in) {
             int fd_in = open(file_in, O_RDONLY);
@@ -103,7 +103,7 @@ void run_command_with_redirection(char* command_path, char *const argv[], char *
         if (isBackgroundProcess){
             char cmdline[CMDLINE_MAX];
             build_cmdline(cmdline, argv);
-            //add redirection info to command line     
+            //add redirection info to command line
             if (file_in) {
                 strcat(cmdline, " < ");
                 strcat(cmdline, file_in);
@@ -121,7 +121,7 @@ void run_command_with_redirection(char* command_path, char *const argv[], char *
     }
 }
 
-//check for finished background jobs   
+//check for finished background jobs
 void check_finished_jobs(void) {
     int status;
     pid_t pid;
@@ -137,7 +137,7 @@ void check_finished_jobs(void) {
     }
 }
 
-//print list of active background jobs     
+//print list of active background jobs
 void print_jobs(void) {
     int any = 0;
     for (int i = 0; i < MAX_JOBS; i++) {
@@ -151,7 +151,7 @@ void print_jobs(void) {
     }
 }
 
-// Check if command is a built-in command   
+// Check if command is a built-in command
 int is_builtin_command(const char *command) {
     if (!command) return 0;
     return (strcmp(command, "exit") == 0) ||
@@ -162,26 +162,26 @@ int is_builtin_command(const char *command) {
 //execute built-in commands
 int execute_builtin_command(char **argv, int argc, char history[][CMDLINE_MAX], int hist_count) {
     if (argc == 0) return 0;
-    
+
     const char *command = argv[0];
-    
+
     if (strcmp(command, "cd") == 0) {
         if (argc > 2) {
             fprintf(stderr, "cd: too many arguments\n");
             return -1;
         }
-        
+
         const char *target = (argc == 1) ? getenv("HOME") : argv[1];
         if (!target) {
             fprintf(stderr, "cd: HOME not set\n");
             return -1;
         }
-        
+
         if (chdir(target) != 0) {
             perror("cd");
             return -1;
         }
-        
+
         // Update PWD environment variable
         char buf[4096];
         if (getcwd(buf, sizeof(buf))) {
@@ -189,12 +189,12 @@ int execute_builtin_command(char **argv, int argc, char history[][CMDLINE_MAX], 
         }
         return 0;
     }
-    
+
     if (strcmp(command, "jobs") == 0) {
         print_jobs();
         return 0;
     }
-    
+
     if (strcmp(command, "exit") == 0) {
         //wait for all background processes to finish
         for (int i = 0; i < MAX_JOBS; i++) {
@@ -203,8 +203,8 @@ int execute_builtin_command(char **argv, int argc, char history[][CMDLINE_MAX], 
                 jobs[i].active = 0;
             }
         }
-        
-        //display command history
+
+        //display command history upon exit
         if (hist_count == 0) {
             printf("no valid commands in history\n");
         } else {
@@ -215,15 +215,17 @@ int execute_builtin_command(char **argv, int argc, char history[][CMDLINE_MAX], 
         }
         exit(0);
     }
-    
+
     return 0;
 }
 
 //add command to history
 void add_to_history(char history[][CMDLINE_MAX], int *hist_count, const char *cmdline) {
     if (!cmdline) return;
-    
+
     strncpy(history[*hist_count % 3], cmdline, CMDLINE_MAX - 1);
     history[*hist_count % 3][CMDLINE_MAX - 1] = '\0';
     (*hist_count)++;
 }
+
+
