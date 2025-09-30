@@ -9,7 +9,7 @@ Supports built-ins, external command execution, redirection, pipelines, and basi
 - [Features](#features)
 - [Build](#build)
 - [Run](#run)
-- [Usage Examples](#usage examples)
+- [Usages](#usages)
 ---
 
 ## Features
@@ -66,8 +66,8 @@ Key files (yours may differ):
 ```bash
 make clean && make
 # outputs: bin/shell
-
-## Usage Example
+---
+## Usgaes
 user@host:/tmp> pwd
 user@host:/tmp> ls -la
 user@host:/tmp> cd / && pwd
