@@ -74,6 +74,11 @@ Diagram (optional): `docs/architecture.drawio.png`
 
 ## Build
 
+## Run
+./bin/shell
+# or pass a script file to run batch mode (if you implemented it)
+./bin/shell < scripts/demo.sh
+
 ### Linux (linprog or Ubuntu)
 ```bash
 make clean && make
