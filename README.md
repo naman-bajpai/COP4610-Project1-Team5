@@ -7,7 +7,6 @@ Supports built-ins, external command execution, redirection, pipelines, and basi
 
 ## Table of Contents
 - [Features](#features)
-- [Architecture](#architecture)
 - [Build](#build)
 - [Run](#run)
 ---
