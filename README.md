@@ -58,14 +58,14 @@ Key files (yours may differ):
 - `Makefile` – build targets
 - `bin/` and `obj/` – outputs
 
-## Build
+## Build and Run
 Tested on Ubuntu/linprog with GCC.
 ```bash
 make clean && make
 # outputs: bin/hell
 ```
 
-## Usage
+## Usages
 
 ### Basics
 ```text
