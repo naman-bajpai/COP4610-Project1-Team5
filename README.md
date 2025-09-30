@@ -3,8 +3,6 @@
 A small UNIX-like shell implemented in C for Florida State University’s COP4610 (Operating Systems).  
 Supports built-ins, external command execution, redirection, pipelines, and basic job control.
 
-> Instructor spec varies by section—update the checklist below to reflect what you actually implemented.
-
 ---
 
 ## Table of Contents
@@ -68,11 +66,7 @@ Key files (yours may differ):
 - `Makefile` – build targets
 - `bin/` and `obj/` – outputs
 
-Diagram (optional): `docs/architecture.drawio.png`
-
 ---
-
-## Build
 
 ## Run
 ./bin/shell
