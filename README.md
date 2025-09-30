@@ -10,14 +10,6 @@ Supports built-ins, external command execution, redirection, pipelines, and basi
 - [Architecture](#architecture)
 - [Build](#build)
 - [Run](#run)
-- [Usage Examples](#usage-examples)
-- [Testing](#testing)
-- [Project Structure](#project-structure)
-- [Design Notes](#design-notes)
-- [Troubleshooting](#troubleshooting)
-- [Credits](#credits)
-- [License](#license)
-
 ---
 
 ## Features
@@ -70,7 +62,6 @@ Key files (yours may differ):
 
 ## Run
 ./bin/shell
-# or pass a script file to run batch mode (if you implemented it)
 ./bin/shell < scripts/demo.sh
 
 ### Linux (linprog or Ubuntu)
