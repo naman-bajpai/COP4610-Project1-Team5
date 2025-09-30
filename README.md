@@ -1,7 +1,7 @@
 # COP4610 – Project 1: UNIX Shell
 
 A small UNIX-like shell implemented in C for Florida State University’s COP4610 (Operating Systems).  
-Supports built-ins, external command execution, redirection, pipelines, and basic job control.
+Supports built-ins (`cd`, `jobs`, `exit`), external command execution with PATH search, basic I/O redirection (`<`, `>`), background jobs (`&`), `$VAR` and `~` expansion, and a 3-entry rolling history printed on exit.
 
 ---
 
@@ -13,23 +13,23 @@ Supports built-ins, external command execution, redirection, pipelines, and basi
 ---
 
 ## Features
+
+### Core
+- Prompt `USER@HOST:/cwd>`
+- External commands via `fork()` + `execvp()` and PATH search
+- Built-ins:
+  - `cd [path]` (defaults to `$HOME`, updates `PWD`)
+  - `jobs` (lists active background jobs)
+  - `exit` (waits for background jobs; prints last 3 commands)
+- Environment expansion: tokens beginning with `$VAR`
+- Tilde expansion: `~` and `~/...` expand to `$HOME`
+- Tokenization is whitespace-based (no quotes/escapes yet)
+
 ### I/O & Background
 - Input redirection: `< file`
 - Output redirection (truncate): `> file`
 - Background: `&` (prints `[job_no] pid` and returns prompt)
-- Periodic reaping of finished BG jobs (`check_finished_jobs`
-
-### Core
-- [x] Prompt (e.g., `mysh> `) with clean EOF handling (Ctrl-D)
-- [x] Parse and run **external commands** via `fork/execvp`
-- [x] Built-ins:
-  - [x] `exit` (graceful shutdown)
-  - [x] `cd [path]` (defaults to `$HOME`)
-  - [x] `pwd`
-  - [ ] `echo` (optional)
-  - [ ] `history` (optional: show last N)
-- [x] PATH search for executables
-- [x] Whitespace trimming, basic quoting
+- Reaping finished background jobs via `check_finished_jobs()` with `WNOHANG`
 
 ### Redirection & Pipes
 - [x] Input `< file`
@@ -58,17 +58,36 @@ Key files (yours may differ):
 - `Makefile` – build targets
 - `bin/` and `obj/` – outputs
 
-## Run
-./bin/shell
-./bin/shell < scripts/demo.sh
-
-### Linux (linprog or Ubuntu)
+## Build
+Tested on Ubuntu/linprog with GCC.
 ```bash
 make clean && make
-# outputs: bin/shell
----
-## Usgaes
+
+
+## Usage
+
+### Basics
+```text
 user@host:/tmp> pwd
 user@host:/tmp> ls -la
 user@host:/tmp> cd / && pwd
+
+user@host:/tmp> echo $HOME
+user@host:/tmp> ls ~
+user@host:/tmp> ls ~/Documents
+
+user@host:/tmp> echo hello > out.txt      # overwrite
+user@host:/tmp> cat < out.txt
+
+user@host:/tmp> sleep 2 &
+[1] 12345
+user@host:/tmp> jobs
+# after it finishes:
+[1] + done sleep 2
+
+user@host:/tmp> exit
+# prints last 3 commands entered during this session
+
+
+
 
