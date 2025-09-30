@@ -8,7 +8,6 @@ Supports built-ins (`cd`, `jobs`, `exit`), external command execution with PATH 
 ## Table of Contents
 - [Features](#features)
 - [Build](#build)
-- [Run](#run)
 - [Usages](#usages)
 ---
 
@@ -58,7 +57,7 @@ Key files (yours may differ):
 - `Makefile` – build targets
 - `bin/` and `obj/` – outputs
 
-## Build and Run
+## Build
 Tested on Ubuntu/linprog with GCC.
 ```bash
 make clean && make
