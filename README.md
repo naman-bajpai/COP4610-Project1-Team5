@@ -9,9 +9,15 @@ Supports built-ins, external command execution, redirection, pipelines, and basi
 - [Features](#features)
 - [Build](#build)
 - [Run](#run)
+- [Usage Examples](#usage examples)
 ---
 
 ## Features
+### I/O & Background
+- Input redirection: `< file`
+- Output redirection (truncate): `> file`
+- Background: `&` (prints `[job_no] pid` and returns prompt)
+- Periodic reaping of finished BG jobs (`check_finished_jobs`
 
 ### Core
 - [x] Prompt (e.g., `mysh> `) with clean EOF handling (Ctrl-D)
@@ -31,7 +37,7 @@ Supports built-ins, external command execution, redirection, pipelines, and basi
 - [x] STDERR `2> file` (optional if required)
 - [x] Single and multi-stage pipelines: `cmd1 | cmd2 | cmd3`
 
-### Job Control (if required by your spec)
+### Job Control 
 - [x] Background `&` (don’t block prompt)
 - [x] `jobs` list active background processes
 - [x] `fg %jobno` (bring job to foreground)
@@ -39,12 +45,7 @@ Supports built-ins, external command execution, redirection, pipelines, and basi
 - [x] Signal handling: ignore `SIGINT` in shell, deliver to foreground group
 - [x] Reap children to prevent zombies (`SIGCHLD`)
 
-> Update checkboxes to match your implementation.
-
----
-
 ## Architecture
-
 - **Lexer/Parser:** tokenizes input into argv vectors and builds a `Pipeline` object
 - **Executor:** sets up redirection & pipes, spawns processes, manages pgid
 - **Built-ins:** run in-process (no `fork`) except where noted
@@ -57,8 +58,6 @@ Key files (yours may differ):
 - `Makefile` – build targets
 - `bin/` and `obj/` – outputs
 
----
-
 ## Run
 ./bin/shell
 ./bin/shell < scripts/demo.sh
@@ -67,3 +66,9 @@ Key files (yours may differ):
 ```bash
 make clean && make
 # outputs: bin/shell
+
+## Usage Example
+user@host:/tmp> pwd
+user@host:/tmp> ls -la
+user@host:/tmp> cd / && pwd
+
