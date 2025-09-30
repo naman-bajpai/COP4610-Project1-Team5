@@ -62,7 +62,8 @@ Key files (yours may differ):
 Tested on Ubuntu/linprog with GCC.
 ```bash
 make clean && make
-
+# outputs: bin/hell
+```
 
 ## Usage
 
@@ -87,7 +88,7 @@ user@host:/tmp> jobs
 
 user@host:/tmp> exit
 # prints last 3 commands entered during this session
-
+```
 
 
 
